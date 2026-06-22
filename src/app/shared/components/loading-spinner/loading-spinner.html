@@ -1,0 +1,40 @@
+<div [class]="containerClass">
+  <div [class]="spinnerClass">
+    <!-- Spinner circulaire -->
+    <mat-spinner 
+      *ngIf="type === 'circular'"
+      [diameter]="spinnerSize"
+      [color]="color">
+    </mat-spinner>
+
+    <!-- Barre de progression linéaire -->
+    <mat-progress-bar 
+      *ngIf="type === 'linear'"
+      [color]="color"
+      mode="indeterminate"
+      class="w-full">
+    </mat-progress-bar>
+
+    <!-- Animation de points -->
+    <div *ngIf="type === 'dots'" class="loading-dots">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+
+    <!-- Animation de pulsation -->
+    <div *ngIf="type === 'pulse'" class="loading-pulse">
+      <div class="loading-pulse-circle"></div>
+    </div>
+
+    <!-- Message de chargement -->
+    <div *ngIf="showMessage && message" class="loading-message mt-3">
+      <p class="text-sm text-gray-600 text-center">{{ message }}</p>
+    </div>
+
+    <!-- Message par défaut si aucun message n'est fourni -->
+    <div *ngIf="showMessage && !message" class="loading-message mt-3">
+      <p class="text-sm text-gray-600 text-center">Chargement en cours...</p>
+    </div>
+  </div>
+</div>
