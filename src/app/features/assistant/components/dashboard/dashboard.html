@@ -1,0 +1,419 @@
+<!-- Header Assistant -->
+<app-admin-header 
+    [user]="currentUser" 
+    [isAuthenticated]="isAuthenticated">
+</app-admin-header>
+
+<!-- Layout principal avec sidebar -->
+<div class="admin-layout">
+    <!-- Sidebar vertical -->
+    <div class="admin-sidebar" style="background: hsl(220, 100%, 32%) !important; color: white !important; width: 250px !important;">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">📋 Menu Principal</h2>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Tableau de Bord - Premier bouton -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'dashboard'"
+                (click)="setActiveTab('dashboard')"
+            >
+                <span class="sidebar-icon">📊</span>
+                <span class="sidebar-text">Tableau de Bord</span>
+            </button>
+            
+            <!-- Gestion des Préinscriptions -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'preinscriptions'"
+                (click)="setActiveTab('preinscriptions')"
+            >
+                <span class="sidebar-icon">📋</span>
+                <span class="sidebar-text">Gestion Inscriptions</span>
+            </button>
+            
+            <!-- Gestion des Évaluations -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'evaluations'"
+                (click)="setActiveTab('evaluations')"
+            >
+                <span class="sidebar-icon">📊</span>
+                <span class="sidebar-text">Gestion Évaluations</span>
+            </button>
+            
+            <!-- Calendrier et Communications -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'communications'"
+                (click)="setActiveTab('communications')"
+            >
+                <span class="sidebar-icon">📅</span>
+                <span class="sidebar-text">Communications</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="admin-main-content">
+        <!-- Contenu dynamique selon l'onglet sélectionné -->
+        
+        <!-- Onglet Gestion des Préinscriptions -->
+        <div *ngIf="activeTab === 'preinscriptions'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Gestion des Préinscriptions</h2>
+                <p class="section-subtitle">Validation et suivi des candidatures d'inscription</p>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <input type="text" class="search-input" placeholder="Rechercher un candidat...">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <select class="filter-select">
+                        <option value="">Tous les statuts</option>
+                        <option value="attente">En attente</option>
+                        <option value="etude">En cours d'étude</option>
+                        <option value="valide">Validé</option>
+                        <option value="refuse">Refusé</option>
+                        <option value="documents">Documents manquants</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Candidat</th>
+                            <th>Formation Demandée</th>
+                            <th>Date Préinscription</th>
+                            <th>Statut</th>
+                            <th>Documents</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Amadou Diop</strong></td>
+                            <td>Licence en Informatique</td>
+                            <td>15/01/2024</td>
+                            <td><span class="status-badge attente">En attente</span></td>
+                            <td>✅ Complet</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Dossier" (click)="viewDossier('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon approve" title="Valider" (click)="validateInscription('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20,6 9,17 4,12"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon reject" title="Refuser" (click)="rejectInscription('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18"/>
+                                            <line x1="6" y1="6" x2="18" y2="18"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Demander Documents" (click)="requestDocuments('1')">📄</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fatou Ndiaye</strong></td>
+                            <td>Master Réseaux & Sécurité</td>
+                            <td>20/01/2024</td>
+                            <td><span class="status-badge confirmee">Validé</span></td>
+                            <td>✅ Complet</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Dossier" (click)="viewDossier('2')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Envoyer Convocation" (click)="sendConvocation('2')">📧</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Omar Fall</strong></td>
+                            <td>Développement Web & Mobile</td>
+                            <td>10/01/2024</td>
+                            <td><span class="status-badge reject">Documents manquants</span></td>
+                            <td>⚠️ Incomplet</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Dossier" (click)="viewDossier('3')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Relancer Candidat" (click)="followUpCandidate('3')">📞</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Gestion des Évaluations -->
+        <div *ngIf="activeTab === 'evaluations'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Gestion des Évaluations</h2>
+                <p class="section-subtitle">Consultation, modification des notes et génération des bulletins</p>
+                <div class="section-actions">
+                    <button class="action-btn add-btn" (click)="showNewEvaluationModal = true">
+                        <span class="btn-icon">➕</span>
+                        Programmer Évaluation
+                    </button>
+                    <button class="action-btn" (click)="generateBulletins()">
+                        <span class="btn-icon">📄</span>
+                        Générer Bulletins
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Évaluation</th>
+                            <th>Formation</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Statut</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Examen Final Programmation</strong></td>
+                            <td>Licence Informatique</td>
+                            <td>15/06/2024</td>
+                            <td><span class="status-badge examen">Examen</span></td>
+                            <td><span class="status-badge programmee">Programmée</span></td>
+                            <td>0/25 saisies</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Détails" (click)="viewEvaluation('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Saisir Notes" (click)="enterGrades('1')">📝</button>
+                                    <button class="action-icon edit" title="Modifier" (click)="editEvaluation('1')">✏️</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>TP Bases de données</strong></td>
+                            <td>Licence Informatique</td>
+                            <td>10/06/2024</td>
+                            <td><span class="status-badge tp">TP</span></td>
+                            <td><span class="status-badge terminee">Terminée</span></td>
+                            <td>25/25 saisies</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Notes" (click)="viewGrades('2')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Modifier Notes" (click)="editGrades('2')">📝</button>
+                                    <button class="action-icon approve" title="Publier" (click)="publishGrades('2')">🔄</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Communications -->
+        <div *ngIf="activeTab === 'communications'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Communications et Calendriers</h2>
+                <p class="section-subtitle">Gestion des annonces, calendriers et notifications étudiants</p>
+                <div class="section-actions">
+                    <button class="action-btn add-btn" (click)="showNewAnnouncementModal = true">
+                        <span class="btn-icon">📢</span>
+                        Nouvelle Annonce
+                    </button>
+                    <button class="action-btn" (click)="showCalendarModal = true">
+                        <span class="btn-icon">📅</span>
+                        Publier Calendrier
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card blue">
+                    <div class="stat-icon">📢</div>
+                    <div class="stat-content">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Annonces publiées</div>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Calendriers actifs</div>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">📧</div>
+                    <div class="stat-content">
+                        <div class="stat-number">45</div>
+                        <div class="stat-label">Convocations envoyées</div>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">🔔</div>
+                    <div class="stat-content">
+                        <div class="stat-number">128</div>
+                        <div class="stat-label">Notifications actives</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Titre</th>
+                            <th>Date Publication</th>
+                            <th>Destinataires</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status-badge examen">Calendrier</span></td>
+                            <td><strong>Calendrier des Examens - Semestre 2</strong></td>
+                            <td>01/06/2024</td>
+                            <td>Tous les étudiants</td>
+                            <td><span class="status-badge confirmee">Publié</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir" (click)="viewAnnouncement('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Modifier" (click)="editAnnouncement('1')">✏️</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge tp">Annonce</span></td>
+                            <td><strong>Rappel - Documents d'inscription</strong></td>
+                            <td>25/05/2024</td>
+                            <td>Candidats validés</td>
+                            <td><span class="status-badge confirmee">Publié</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir" (click)="viewAnnouncement('2')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Modifier" (click)="editAnnouncement('2')">✏️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Tableau de Bord -->
+        <div *ngIf="activeTab === 'dashboard'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Tableau de Bord Assistant</h2>
+                <p class="section-subtitle">Vue d'ensemble des activités de validation et de gestion académique</p>
+            </div>
+
+            <!-- Statistiques détaillées -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Préinscriptions en attente</div>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-number">28</div>
+                            <div class="stat-label">Validées ce mois</div>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">Évaluations programmées</div>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-content">
+                            <div class="stat-number">45</div>
+                            <div class="stat-label">Bulletins à générer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="main-section" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <h3 class="section-title">Actions Rapides</h3>
+                    <p class="section-subtitle">Accès direct aux fonctionnalités principales</p>
+                </div>
+                
+                <div class="quick-actions-grid">
+                    <button class="quick-action-card" (click)="setActiveTab('preinscriptions')">
+                        <div class="action-icon">📋</div>
+                        <h4>Valider Préinscriptions</h4>
+                        <p>15 dossiers en attente de validation</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('evaluations')">
+                        <div class="action-icon">📊</div>
+                        <h4>Saisir Notes</h4>
+                        <p>3 évaluations nécessitent des notes</p>
+                    </button>
+                    <button class="quick-action-card" (click)="generateBulletins()">
+                        <div class="action-icon">📄</div>
+                        <h4>Générer Bulletins</h4>
+                        <p>Créer les bulletins du semestre</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('communications')">
+                        <div class="action-icon">📅</div>
+                        <h4>Publier Calendrier</h4>
+                        <p>Informer les étudiants des dates</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals seraient ajoutés ici -->

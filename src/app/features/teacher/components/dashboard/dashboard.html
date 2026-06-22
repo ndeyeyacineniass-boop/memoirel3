@@ -1,0 +1,291 @@
+<div class="teacher-dashboard">
+  <!-- Header -->
+  <section class="header-section">
+    <div class="header-content">
+      <h1 class="header-title">Espace Enseignant</h1>
+      <p class="header-description">Gestion des évaluations et des résultats</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Navigation des onglets -->
+    <div class="tabs-container">
+      <div class="tabs-list">
+        <button 
+          class="tab-trigger" 
+          [class.active]="activeTab === 'evaluations'"
+          (click)="setActiveTab('evaluations')"
+        >
+          <span class="tab-icon">📅</span>
+          <span>Évaluations</span>
+        </button>
+        <button 
+          class="tab-trigger" 
+          [class.active]="activeTab === 'resultats'"
+          (click)="setActiveTab('resultats')"
+        >
+          <span class="tab-icon">🏆</span>
+          <span>Résultats</span>
+        </button>
+        <button 
+          class="tab-trigger" 
+          [class.active]="activeTab === 'rapports'"
+          (click)="setActiveTab('rapports')"
+        >
+          <span class="tab-icon">📊</span>
+          <span>Rapports</span>
+        </button>
+      </div>
+
+      <!-- Contenu des onglets -->
+      <div class="tab-content">
+        <!-- Onglet Évaluations -->
+        <div *ngIf="activeTab === 'evaluations'" class="tab-panel">
+          <div class="section-header">
+            <h2 class="section-title">Programmer une évaluation</h2>
+            <button class="btn btn-primary" (click)="openNewEvaluationModal()">
+              <span class="btn-icon">➕</span>
+              Nouvelle évaluation
+            </button>
+          </div>
+
+          <div class="evaluations-grid">
+            <div *ngFor="let evaluation of evaluations" class="evaluation-card">
+              <div class="card-header">
+                <div class="card-title-section">
+                  <h3 class="card-title">
+                    <span class="card-icon">{{ getEvaluationTypeIcon(evaluation.type) }}</span>
+                    {{ evaluation.titre }}
+                  </h3>
+                  <span class="evaluation-type">{{ evaluation.type }}</span>
+                </div>
+                <p class="card-description">
+                  Formation: {{ getFormationName(evaluation.formationId) }}
+                </p>
+              </div>
+              <div class="card-content">
+                <div class="evaluation-details">
+                  <div class="detail-item">
+                    <strong>Date :</strong> {{ formatDate(evaluation.date) }}
+                  </div>
+                  <div class="detail-item">
+                    <strong>Durée :</strong> {{ evaluation.duree }} min
+                  </div>
+                  <div class="detail-item">
+                    <strong>Coefficient :</strong> {{ evaluation.coefficient }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Onglet Résultats -->
+        <div *ngIf="activeTab === 'resultats'" class="tab-panel">
+          <div class="section-header">
+            <h2 class="section-title">Gestion des résultats</h2>
+            <button class="btn btn-primary" (click)="publishResults()">
+              <span class="btn-icon">📤</span>
+              Publier les résultats
+            </button>
+          </div>
+
+          <div class="results-table-container">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>Étudiant</th>
+                  <th>Évaluation</th>
+                  <th>Formation</th>
+                  <th>Note</th>
+                  <th>Date de publication</th>
+                  <th>Commentaire</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let note of notes">
+                  <td class="student-name">{{ getEtudiantName(note.etudiantId) }}</td>
+                  <td>
+                    {{ getEvaluationTitle(note.evaluationId) }}
+                  </td>
+                  <td>
+                    {{ getFormationName(getEvaluationFormationId(note.evaluationId)) }}
+                  </td>
+                  <td>
+                    <span class="note-value" [class.success]="note.valeur >= 10" [class.danger]="note.valeur < 10">
+                      {{ note.valeur }}/20
+                    </span>
+                  </td>
+                  <td>{{ formatDate(note.datePublication) }}</td>
+                  <td class="comment-cell">
+                    <span *ngIf="note.commentaire" class="comment-text">{{ note.commentaire }}</span>
+                    <span *ngIf="!note.commentaire" class="no-comment">Aucun commentaire</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Onglet Rapports -->
+        <div *ngIf="activeTab === 'rapports'" class="tab-panel">
+          <h2 class="section-title">Rapports et statistiques</h2>
+          
+          <!-- Statistiques globales -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <h4 class="stat-title">Moyenne générale</h4>
+                <span class="stat-icon">📊</span>
+              </div>
+              <div class="stat-value">{{ calculateStats().moyenne.toFixed(1) }}/20</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <h4 class="stat-title">Note maximale</h4>
+                <span class="stat-icon">⭐</span>
+              </div>
+              <div class="stat-value success">{{ calculateStats().noteMax }}/20</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <h4 class="stat-title">Note minimale</h4>
+                <span class="stat-icon">📉</span>
+              </div>
+              <div class="stat-value warning">{{ calculateStats().noteMin }}/20</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <h4 class="stat-title">Taux de réussite</h4>
+                <span class="stat-icon">📈</span>
+              </div>
+              <div class="stat-value">{{ calculateStats().tauxReussite.toFixed(1) }}%</div>
+            </div>
+          </div>
+
+          <!-- Analyse par formation -->
+          <div class="formation-analysis-card">
+            <div class="card-header">
+              <h3 class="card-title">Analyse par formation</h3>
+              <p class="card-description">Performance détaillée de chaque formation</p>
+            </div>
+            <div class="card-content">
+              <div class="formation-stats-list">
+                <div *ngFor="let formation of formations" class="formation-stat-item">
+                  <h4 class="formation-name">{{ formation.nom }}</h4>
+                  <div class="formation-stats-grid">
+                    <div class="stat-item">
+                      <span class="stat-label">Évaluations: </span>
+                      <span class="stat-value">{{ getFormationStats(formation.id).evaluations }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Notes: </span>
+                      <span class="stat-value">{{ getFormationStats(formation.id).notes }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Moyenne: </span>
+                      <span class="stat-value">{{ getFormationStats(formation.id).moyenne.toFixed(1) }}/20</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Réussite: </span>
+                      <span class="stat-value">{{ getFormationStats(formation.id).reussite.toFixed(1) }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nouvelle Évaluation -->
+  <div *ngIf="showNewEvaluationModal" class="modal-overlay" (click)="closeNewEvaluationModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="modal-icon">📅</span>
+          Programmer une évaluation
+        </h3>
+        <p class="modal-description">Créez une nouvelle évaluation pour vos étudiants</p>
+        <button class="modal-close" (click)="closeNewEvaluationModal()">✗</button>
+      </div>
+      
+      <form [formGroup]="newEvaluationForm" (ngSubmit)="createEvaluation()" class="modal-form">
+        <div class="form-group">
+          <label for="type" class="form-label">Type d'évaluation *</label>
+          <select id="type" class="form-select" formControlName="type">
+            <option value="">Sélectionnez le type</option>
+            <option value="Examen">Examen</option>
+            <option value="TP">TP</option>
+            <option value="Contrôle">Contrôle</option>
+            <option value="Projet">Projet</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="formation" class="form-label">Formation *</label>
+          <select id="formation" class="form-select" formControlName="formationId">
+            <option value="">Sélectionnez la formation</option>
+            <option *ngFor="let formation of formations" [value]="formation.id">
+              {{ formation.nom }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="titre" class="form-label">Titre *</label>
+          <input
+            id="titre"
+            type="text"
+            class="form-input"
+            formControlName="titre"
+            placeholder="Ex: Examen Final Programmation"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="date" class="form-label">Date *</label>
+            <input
+              id="date"
+              type="date"
+              class="form-input"
+              formControlName="date"
+            />
+          </div>
+          <div class="form-group">
+            <label for="duree" class="form-label">Durée (min)</label>
+            <input
+              id="duree"
+              type="number"
+              class="form-input"
+              formControlName="duree"
+              placeholder="120"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="coefficient" class="form-label">Coefficient</label>
+          <input
+            id="coefficient"
+            type="number"
+            class="form-input"
+            formControlName="coefficient"
+            placeholder="2"
+            step="0.5"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">
+          Programmer l'évaluation
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

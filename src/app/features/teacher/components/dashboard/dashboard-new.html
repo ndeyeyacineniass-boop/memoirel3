@@ -1,0 +1,422 @@
+<!-- Header Enseignant -->
+<app-admin-header 
+    [user]="currentUser" 
+    [isAuthenticated]="isAuthenticated">
+</app-admin-header>
+
+<!-- Layout principal avec sidebar -->
+<div class="admin-layout">
+    <!-- Sidebar vertical -->
+    <div class="admin-sidebar" style="background: hsl(220, 100%, 32%) !important; color: white !important; width: 250px !important;">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">📋 Menu Principal</h2>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Tableau de Bord - Premier bouton -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'dashboard'"
+                (click)="setActiveTab('dashboard')"
+            >
+                <span class="sidebar-icon">📊</span>
+                <span class="sidebar-text">Tableau de Bord</span>
+            </button>
+            
+            <!-- Mes Évaluations -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'evaluations'"
+                (click)="setActiveTab('evaluations')"
+            >
+                <span class="sidebar-icon">📅</span>
+                <span class="sidebar-text">Mes Évaluations</span>
+            </button>
+            
+            <!-- Saisie des Notes -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'notes'"
+                (click)="setActiveTab('notes')"
+            >
+                <span class="sidebar-icon">📝</span>
+                <span class="sidebar-text">Saisie Notes</span>
+            </button>
+            
+            <!-- Rapports et Statistiques -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'rapports'"
+                (click)="setActiveTab('rapports')"
+            >
+                <span class="sidebar-icon">📊</span>
+                <span class="sidebar-text">Rapports</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="admin-main-content">
+        <!-- Contenu dynamique selon l'onglet sélectionné -->
+        
+        <!-- Onglet Mes Évaluations -->
+        <div *ngIf="activeTab === 'evaluations'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Mes Évaluations</h2>
+                <p class="section-subtitle">Programmation et gestion de vos évaluations</p>
+                <div class="section-actions">
+                    <button class="action-btn add-btn" (click)="showNewEvaluationModal = true">
+                        <span class="btn-icon">➕</span>
+                        Nouvelle Évaluation
+                    </button>
+                    <select class="filter-select">
+                        <option value="">Toutes les formations</option>
+                        <option value="licence-info">Licence Informatique</option>
+                        <option value="master-reseaux">Master Réseaux</option>
+                        <option value="dev-web">Développement Web</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Évaluation</th>
+                            <th>Formation</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Durée</th>
+                            <th>Coefficient</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let evaluation of evaluations">
+                            <td><strong>{{ evaluation.titre }}</strong></td>
+                            <td>{{ getFormationName(evaluation.formationId) }}</td>
+                            <td><span class="status-badge" [class]="getTypeClass(evaluation.type)">{{ evaluation.type }}</span></td>
+                            <td>{{ formatDate(evaluation.date) }}</td>
+                            <td>{{ evaluation.duree }}min</td>
+                            <td>{{ evaluation.coefficient }}</td>
+                            <td><span class="status-badge" [class]="getStatutClass(evaluation.statut)">{{ evaluation.statut }}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Détails" (click)="viewEvaluation(evaluation.id)">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Modifier" (click)="editEvaluation(evaluation.id)">✏️</button>
+                                    <button class="action-icon edit" title="Saisir Notes" (click)="enterGrades(evaluation.id)" *ngIf="evaluation.statut === 'Terminée'">📝</button>
+                                    <button class="action-icon delete" title="Supprimer" (click)="deleteEvaluation(evaluation.id)" *ngIf="evaluation.statut === 'Programmée'">🗑️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Saisie des Notes -->
+        <div *ngIf="activeTab === 'notes'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Saisie des Notes</h2>
+                <p class="section-subtitle">Saisie et gestion des notes d'évaluations</p>
+                <div class="section-actions">
+                    <select class="filter-select" [(ngModel)]="selectedEvaluationForGrades" (change)="loadStudentsForEvaluation()">
+                        <option value="">Sélectionner une évaluation</option>
+                        <option *ngFor="let eval of getCompletedEvaluations()" [value]="eval.id">
+                            {{ eval.titre }} - {{ getFormationName(eval.formationId) }}
+                        </option>
+                    </select>
+                    <button class="action-btn" (click)="publishGrades()" *ngIf="selectedEvaluationForGrades">
+                        <span class="btn-icon">📤</span>
+                        Publier Notes
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="selectedEvaluationForGrades" class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Étudiant</th>
+                            <th>Formation</th>
+                            <th>Note (/20)</th>
+                            <th>Commentaire</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let student of studentsForGrading; trackBy: trackByStudentId">
+                            <td><strong>{{ student.nom }} {{ student.prenom }}</strong></td>
+                            <td>{{ getFormationName(student.formationId) }}</td>
+                            <td>
+                                <input 
+                                    type="number" 
+                                    class="grade-input"
+                                    [(ngModel)]="student.note"
+                                    min="0" 
+                                    max="20" 
+                                    step="0.5"
+                                    (change)="updateGrade(student.id, $any($event.target).value)"
+                                    placeholder="0.0"
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    class="comment-input"
+                                    [(ngModel)]="student.commentaire"
+                                    (change)="updateComment(student.id, $any($event.target).value)"
+                                    placeholder="Commentaire optionnel..."
+                                />
+                            </td>
+                            <td>
+                                <span class="status-badge" [class]="getGradeStatusClass(student.note)">
+                                    {{ getGradeStatus(student.note) }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon approve" title="Valider Note" (click)="validateGrade(student.id)" *ngIf="student.note !== null && student.note !== undefined">
+                                        ✅
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div *ngIf="!selectedEvaluationForGrades" class="empty-state" style="text-align: center; padding: 3rem; color: #6b7280;">
+                <div class="empty-icon" style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+                <p class="empty-text">Sélectionnez une évaluation pour commencer la saisie des notes</p>
+            </div>
+        </div>
+
+        <!-- Onglet Rapports -->
+        <div *ngIf="activeTab === 'rapports'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Rapports et Statistiques</h2>
+                <p class="section-subtitle">Analyse des performances et statistiques détaillées</p>
+                <div class="section-actions">
+                    <button class="action-btn" (click)="exportReport()">
+                        <span class="btn-icon">📊</span>
+                        Export Rapport
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card blue">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getTotalEvaluations() }}</div>
+                        <div class="stat-label">Évaluations créées</div>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getTotalGrades() }}</div>
+                        <div class="stat-label">Notes saisies</div>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getAverageGrade() }}</div>
+                        <div class="stat-label">Moyenne générale</div>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getSuccessRate() }}%</div>
+                        <div class="stat-label">Taux de réussite</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Formation</th>
+                            <th>Évaluations</th>
+                            <th>Notes Saisies</th>
+                            <th>Moyenne</th>
+                            <th>Note Max</th>
+                            <th>Note Min</th>
+                            <th>Taux Réussite</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let stat of getFormationStats()">
+                            <td><strong>{{ stat.formationName }}</strong></td>
+                            <td>{{ stat.evaluations }}</td>
+                            <td>{{ stat.notesSaisies }}</td>
+                            <td>
+                                <span class="note-display" [class]="getNoteClass(stat.moyenne)">
+                                    <strong>{{ stat.moyenne }}/20</strong>
+                                </span>
+                            </td>
+                            <td class="moyenne-excellente">{{ stat.noteMax }}/20</td>
+                            <td class="moyenne-faible">{{ stat.noteMin }}/20</td>
+                            <td>
+                                <span class="status-badge" [class]="getSuccessRateClass(stat.tauxReussite)">
+                                    {{ stat.tauxReussite }}%
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Tableau de Bord -->
+        <div *ngIf="activeTab === 'dashboard'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Tableau de Bord Enseignant</h2>
+                <p class="section-subtitle">Vue d'ensemble de vos activités d'enseignement</p>
+            </div>
+
+            <!-- Statistiques détaillées -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getEvaluationsThisMonth() }}</div>
+                            <div class="stat-label">Évaluations ce mois</div>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getCompletedEvaluations().length }}</div>
+                            <div class="stat-label">Évaluations terminées</div>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getPendingGrades() }}</div>
+                            <div class="stat-label">Notes à saisir</div>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getTotalStudents() }}</div>
+                            <div class="stat-label">Étudiants suivis</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="main-section" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <h3 class="section-title">Actions Rapides</h3>
+                    <p class="section-subtitle">Accès direct aux fonctionnalités principales</p>
+                </div>
+                
+                <div class="quick-actions-grid">
+                    <button class="quick-action-card" (click)="showNewEvaluationModal = true">
+                        <div class="action-icon">📅</div>
+                        <h4>Nouvelle Évaluation</h4>
+                        <p>Programmer une nouvelle évaluation</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('notes')">
+                        <div class="action-icon">📝</div>
+                        <h4>Saisir Notes</h4>
+                        <p>{{ getPendingGrades() }} évaluations en attente</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('evaluations')">
+                        <div class="action-icon">📋</div>
+                        <h4>Mes Évaluations</h4>
+                        <p>Gérer vos évaluations existantes</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('rapports')">
+                        <div class="action-icon">📊</div>
+                        <h4>Voir Rapports</h4>
+                        <p>Statistiques et analyses</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nouvelle Évaluation -->
+<div *ngIf="showNewEvaluationModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Programmer une Nouvelle Évaluation</h3>
+            <button class="modal-close" (click)="showNewEvaluationModal = false">×</button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type d'évaluation *</label>
+                        <select [(ngModel)]="newEvaluation.type" name="type" required>
+                            <option value="">Sélectionner</option>
+                            <option value="Examen">Examen</option>
+                            <option value="TP">TP</option>
+                            <option value="Contrôle">Contrôle</option>
+                            <option value="Projet">Projet</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Formation *</label>
+                        <select [(ngModel)]="newEvaluation.formationId" name="formationId" required>
+                            <option value="">Sélectionner</option>
+                            <option *ngFor="let formation of formations" [value]="formation.id">
+                                {{ formation.nom }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Titre de l'évaluation *</label>
+                    <input type="text" [(ngModel)]="newEvaluation.titre" name="titre" placeholder="Ex: Examen Final Programmation" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date *</label>
+                        <input type="date" [(ngModel)]="newEvaluation.date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Heure</label>
+                        <input type="time" [(ngModel)]="newEvaluation.heure" name="heure">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Durée (minutes)</label>
+                        <input type="number" [(ngModel)]="newEvaluation.duree" name="duree" placeholder="120">
+                    </div>
+                    <div class="form-group">
+                        <label>Coefficient</label>
+                        <input type="number" [(ngModel)]="newEvaluation.coefficient" name="coefficient" step="0.5" placeholder="2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Instructions (optionnel)</label>
+                    <textarea [(ngModel)]="newEvaluation.instructions" name="instructions" placeholder="Instructions spéciales pour l'évaluation..." rows="3"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="showNewEvaluationModal = false">Annuler</button>
+            <button class="btn btn-primary" (click)="createEvaluation()">Programmer l'Évaluation</button>
+        </div>
+    </div>
+</div>
