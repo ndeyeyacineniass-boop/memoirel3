@@ -1,0 +1,147 @@
+<div class="student-dashboard">
+  <!-- Header -->
+  <section class="header-section">
+    <div class="header-content">
+      <h1 class="header-title">Espace Étudiant</h1>
+      <p class="header-description">Bienvenue {{ getCurrentStudent()?.prenom }} {{ getCurrentStudent()?.nom }}</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Navigation des onglets -->
+    <div class="tabs-container">
+      <div class="tabs-list">
+        <button 
+          class="tab-trigger" 
+          [class.active]="activeTab === 'inscriptions'"
+          (click)="setActiveTab('inscriptions')"
+        >
+          <span class="tab-icon">📚</span>
+          <span>Mes Inscriptions</span>
+        </button>
+        <button 
+          class="tab-trigger" 
+          [class.active]="activeTab === 'resultats'"
+          (click)="setActiveTab('resultats')"
+        >
+          <span class="tab-icon">🏆</span>
+          <span>Mes Résultats</span>
+        </button>
+      </div>
+
+      <!-- Contenu des onglets -->
+      <div class="tab-content">
+        <!-- Onglet Inscriptions -->
+        <div *ngIf="activeTab === 'inscriptions'" class="tab-panel">
+          <div class="inscriptions-grid">
+            <div *ngFor="let inscription of getStudentInscriptions()" class="inscription-card">
+              <div class="card-header">
+                <div class="card-title-section">
+                  <h3 class="card-title">
+                    <span class="card-icon">📚</span>
+                    {{ getFormationName(inscription.formationId) }}
+                  </h3>
+                  <span class="badge" [class]="'badge-' + getStatutColor(inscription.statut)">
+                    {{ inscription.statut.charAt(0).toUpperCase() + inscription.statut.slice(1) }}
+                  </span>
+                </div>
+                <p class="card-description">
+                  Inscription effectuée le {{ formatDate(inscription.dateInscription) }}
+                </p>
+              </div>
+              <div class="card-content">
+                <div class="status-message">
+                  <span class="status-icon">⏰</span>
+                  <span>{{ getStatutMessage(inscription.statut) }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="getStudentInscriptions().length === 0" class="empty-state">
+              <div class="empty-icon">⚠️</div>
+              <p class="empty-text">Aucune inscription trouvée</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Onglet Résultats -->
+        <div *ngIf="activeTab === 'resultats'" class="tab-panel">
+          <div class="results-grid">
+            <div *ngFor="let note of getStudentNotes()" class="result-card">
+              <div class="card-header">
+                <div class="card-title-section">
+                  <h3 class="card-title">
+                    <span class="card-icon">🏆</span>
+                    {{ getEvaluationName(note.evaluationId) }}
+                  </h3>
+                  <div class="note-display">
+                    <span class="note-icon">⭐</span>
+                    <span class="note-value">{{ note.valeur }}/20</span>
+                  </div>
+                </div>
+                <p class="card-description">
+                  Publié le {{ formatDate(note.datePublication) }}
+                </p>
+              </div>
+              <div class="card-content">
+                <div *ngIf="note.commentaire" class="comment-section">
+                  <p class="comment-text">
+                    <strong>Commentaire :</strong> {{ note.commentaire }}
+                  </p>
+                </div>
+                
+                <div class="reclamation-section">
+                  <button 
+                    class="btn btn-outline btn-sm"
+                    (click)="showReclamationModal(note.id)"
+                  >
+                    <span class="btn-icon">⚠️</span>
+                    Réclamer cette note
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="getStudentNotes().length === 0" class="empty-state">
+              <div class="empty-icon">🏆</div>
+              <p class="empty-text">Aucun résultat disponible</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Réclamation -->
+  <div *ngIf="showReclamation" class="modal-overlay" (click)="closeReclamationModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="modal-icon">📄</span>
+          Réclamation de note
+        </h3>
+        <p class="modal-description">
+          Expliquez le motif de votre réclamation concernant cette évaluation
+        </p>
+        <button class="modal-close" (click)="closeReclamationModal()">✗</button>
+      </div>
+      
+      <form [formGroup]="reclamationForm" (ngSubmit)="handleReclamation(selectedNoteId)" class="modal-form">
+        <div class="form-group">
+          <label for="motif" class="form-label">Motif de la réclamation *</label>
+          <textarea
+            id="motif"
+            class="form-textarea"
+            formControlName="motif"
+            placeholder="Expliquez pourquoi vous contestez cette note..."
+            rows="4"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">
+          Envoyer la réclamation
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
