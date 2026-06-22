@@ -1,0 +1,196 @@
+<div class="formations-page">
+  <!-- Header Navigation -->
+  <header class="header-navigation">
+    <div class="header-container">
+      <div class="header-content">
+        <div class="logo-section">
+          <img src="assets/logoo.png" alt="Logo ISI" class="logo-image" />
+        </div>
+        <nav class="main-navigation">
+          <a routerLink="/visitor/home" class="nav-link">Accueil</a>
+          <a routerLink="/visitor/formations" class="nav-link active">Formations</a>
+        </nav>
+                          <div class="auth-buttons">
+                    <a routerLink="/auth/login" class="btn btn-outline">
+                      <span class="btn-icon">🔑</span>
+                      <span>Connexion</span>
+                    </a>
+                    <a routerLink="/auth/pre-inscription" class="btn btn-primary">
+                      <span class="btn-icon">📝</span>
+                      <span>Pré-inscription</span>
+                    </a>
+                  </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Title Section -->
+  <section class="page-title-section">
+    <div class="title-container">
+      <h1 class="page-title">Nos Formations ISI</h1>
+      <p class="page-description">
+        Découvrez toutes nos formations spécialisées en informatique, conçues pour former les experts de demain
+      </p>
+    </div>
+  </section>
+
+  <!-- Formations List -->
+  <section class="formations-section">
+    <div class="formations-container">
+      <div class="formations-grid">
+        <div class="formation-card" *ngFor="let formation of formations">
+          <div class="formation-header">
+            <div class="formation-icon">
+              <svg class="graduation-cap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="formation-badge">{{ formation.niveau }}</div>
+          </div>
+          <h3 class="formation-title">{{ formation.nom }}</h3>
+          <p class="formation-description">{{ formation.description }}</p>
+          
+          <div class="formation-details">
+            <div class="detail-item">
+              <span class="detail-icon">
+                <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12,6 12,12 16,14"/>
+                </svg>
+              </span>
+              <span>{{ formation.duree }}</span>
+            </div>
+                         <div class="detail-item">
+               <span>{{ formation.prix.toLocaleString('fr-FR') }} FCFA</span>
+             </div>
+          </div>
+
+          <button 
+            class="btn btn-primary btn-full"
+            (click)="openPreInscription(formation.id)"
+          >
+            Pré-inscription
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <h2 class="cta-title">Rejoignez ISI dès aujourd'hui</h2>
+      <p class="cta-description">
+        Faites le premier pas vers une carrière réussie dans l'informatique
+      </p>
+      <div class="cta-buttons">
+        <a routerLink="/auth/pre-inscription" class="btn btn-white">
+          Pré-inscription
+        </a>
+        <a routerLink="/auth/login" class="btn btn-white">
+          Se connecter
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Pré-inscription -->
+  <div class="modal-overlay" *ngIf="showPreInscriptionModal" (click)="closePreInscription()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <span class="modal-icon">🏆</span>
+          Pré-inscription - {{ getSelectedFormationName() }}
+        </h3>
+        <p class="modal-description">
+          Remplissez ce formulaire pour débuter votre pré-inscription
+        </p>
+      </div>
+      
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nom" class="form-label">
+              <span class="label-icon">👤</span>
+              <span>Nom *</span>
+            </label>
+            <input
+              type="text"
+              id="nom"
+              [(ngModel)]="preInscriptionData.nom"
+              name="nom"
+              placeholder="Votre nom"
+              class="form-input"
+            />
+          </div>
+          <div class="form-group">
+            <label for="prenom" class="form-label">Prénom *</label>
+            <input
+              type="text"
+              id="prenom"
+              [(ngModel)]="preInscriptionData.prenom"
+              name="prenom"
+              placeholder="Votre prénom"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <span class="label-icon">📧</span>
+            <span>Email *</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="preInscriptionData.email"
+            name="email"
+            placeholder="votre.email@example.com"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="telephone" class="form-label">
+            <span class="label-icon">📞</span>
+            <span>Téléphone</span>
+          </label>
+          <input
+            type="tel"
+            id="telephone"
+            [(ngModel)]="preInscriptionData.telephone"
+            name="telephone"
+            placeholder="+221 XX XXX XX XX"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="motivation" class="form-label">
+            <span class="label-icon">💭</span>
+            <span>Lettre de motivation</span>
+          </label>
+          <textarea
+            id="motivation"
+            [(ngModel)]="preInscriptionData.motivation"
+            name="motivation"
+            placeholder="Expliquez votre motivation pour cette formation..."
+            rows="4"
+            class="form-input"
+          ></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" (click)="closePreInscription()">
+            Annuler
+          </button>
+          <button type="button" class="btn btn-primary" (click)="handlePreInscription()">
+            Envoyer la pré-inscription
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
