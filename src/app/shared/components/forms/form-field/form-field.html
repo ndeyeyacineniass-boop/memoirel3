@@ -1,0 +1,47 @@
+<div class="form-field">
+  <label *ngIf="label" class="form-label">
+    {{ label }}
+    <span *ngIf="required" class="required">*</span>
+  </label>
+  
+  <div class="form-control-wrapper">
+    <!-- Input text -->
+    <input
+      *ngIf="type === 'text' || type === 'email' || type === 'password' || type === 'number'"
+      [type]="type"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      class="form-input"
+    />
+    
+    <!-- Textarea -->
+    <textarea
+      *ngIf="type === 'textarea'"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      class="form-textarea"
+    ></textarea>
+    
+    <!-- Select -->
+    <select
+      *ngIf="type === 'select'"
+      [disabled]="disabled"
+      class="form-select"
+    >
+      <option *ngIf="placeholder" value="" disabled selected>{{ placeholder }}</option>
+      <option *ngFor="let option of options" [value]="option.value">
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
+  
+  <!-- Help text -->
+  <div *ngIf="helpText" class="form-help-text">{{ helpText }}</div>
+  
+  <!-- Error message -->
+  <div *ngIf="hasError" class="form-error-message">
+    Erreur de validation
+  </div>
+</div>

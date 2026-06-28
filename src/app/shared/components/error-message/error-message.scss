@@ -1,0 +1,337 @@
+.error-message {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: var(--transition);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card styles */
+.error-card {
+  border: none;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.error-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* Header */
+.error-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.error-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.error-icon mat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.error-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Content */
+.error-content {
+  margin-bottom: var(--spacing-md);
+}
+
+.error-text {
+  margin: 0;
+  line-height: 1.5;
+  color: inherit;
+}
+
+.error-details {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--background-secondary);
+  border-radius: var(--border-radius-sm);
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Actions */
+.error-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.error-action-btn {
+  min-width: auto;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+}
+
+.error-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Dismiss button */
+.error-dismiss {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  min-width: auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: inherit;
+  opacity: 0.7;
+  transition: var(--transition);
+}
+
+.error-dismiss:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+/* Size variants */
+.error-message.small .error-card {
+  padding: var(--spacing-sm);
+}
+
+.error-message.small .error-title {
+  font-size: var(--font-size-md);
+}
+
+.error-message.small .error-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.error-message.small .error-icon mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.error-message.large .error-card {
+  padding: var(--spacing-xl);
+}
+
+.error-message.large .error-title {
+  font-size: var(--font-size-xl);
+}
+
+.error-message.large .error-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.error-message.large .error-icon mat-icon {
+  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Type variants */
+.error-message.error .error-card {
+  background-color: var(--error-bg);
+  color: var(--error-color);
+}
+
+.error-message.error .error-icon {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.error-message.error .error-details {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}
+
+.error-message.warning .error-card {
+  background-color: var(--warning-bg);
+  color: var(--warning-color);
+}
+
+.error-message.warning .error-icon {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.error-message.warning .error-details {
+  background-color: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+.error-message.info .error-card {
+  background-color: var(--info-bg);
+  color: var(--info-color);
+}
+
+.error-message.info .error-icon {
+  background-color: var(--info-color);
+  color: white;
+}
+
+.error-message.info .error-details {
+  background-color: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
+.error-message.success .error-card {
+  background-color: var(--success-bg);
+  color: var(--success-color);
+}
+
+.error-message.success .error-icon {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.error-message.success .error-details {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+/* Overlay variant */
+.error-message.overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.error-message.overlay .error-card {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Full screen variant */
+.error-message.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.error-message.fullscreen .error-card {
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Auto dismiss animation */
+.error-message.auto-dismiss {
+  animation: slideIn 0.3s ease-out, slideOut 0.3s ease-in 4.7s forwards;
+}
+
+@keyframes slideOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .error-message.overlay,
+  .error-message.fullscreen {
+    padding: var(--spacing-md);
+  }
+  
+  .error-message.fullscreen .error-card {
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .error-action-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .error-icon {
+    align-self: flex-start;
+  }
+  
+  .error-dismiss {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: var(--spacing-sm);
+  }
+}
+
+/* Focus styles */
+.error-message:focus-within {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .error-message {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .error-dismiss,
+  .error-actions {
+    display: none;
+  }
+}

@@ -1,0 +1,35 @@
+/* Interface Étudiant - Utilise le même design que l'admin */
+@import '../../../admin/components/dashboard/dashboard.scss';
+
+/* Même couleur bleue que l'admin */
+.admin-sidebar {
+  background: hsl(220, 100%, 32%) !important;
+}
+
+/* Styles pour l'affichage des notes */
+.note-display {
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  display: inline-block;
+}
+
+.moyenne-excellente {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.moyenne-bonne {
+  color: #059669;
+  background: #ecfdf5;
+}
+
+.moyenne-moyenne {
+  color: #d97706;
+  background: #fef3c7;
+}
+
+.moyenne-faible {
+  color: #dc2626;
+  background: #fee2e2;
+}

@@ -1,0 +1,23 @@
+<header class="admin-header">
+  <div class="header-container">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="assets/logoo.png" alt="Logo ISI" class="logo-image" />
+      </div>
+      
+      <div *ngIf="isAuthenticated && user" class="user-section">
+        <div class="user-info">
+          <span class="user-icon">👤</span>
+          <div class="user-details">
+            <span class="user-name">{{ user.prenom }} {{ user.nom }}</span>
+            <span class="user-role">{{ getRoleLabel(user.role) }}</span>
+          </div>
+        </div>
+        <button class="logout-btn" (click)="logout()">
+          <span class="logout-icon">🚪</span>
+          <span>Déconnexion</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

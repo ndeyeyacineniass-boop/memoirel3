@@ -1,0 +1,547 @@
+.data-table {
+  background-color: var(--background-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.data-table:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* Table container */
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--border-radius);
+}
+
+/* Table */
+.data-table-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--background-primary);
+}
+
+/* Header */
+.data-table-header {
+  background-color: var(--background-secondary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.data-table-header th {
+  padding: var(--spacing-md) var(--spacing-sm);
+  text-align: left;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  white-space: nowrap;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+}
+
+.data-table-header th:hover {
+  background-color: var(--background-hover);
+}
+
+.data-table-header th.sortable {
+  cursor: pointer;
+}
+
+.data-table-header th.sortable:hover {
+  background-color: var(--background-hover);
+}
+
+.data-table-header th.sortable::after {
+  content: '↕';
+  position: absolute;
+  right: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  transition: var(--transition);
+}
+
+.data-table-header th.sort-asc::after {
+  content: '↑';
+  color: var(--primary-color);
+}
+
+.data-table-header th.sort-desc::after {
+  content: '↓';
+  color: var(--primary-color);
+}
+
+.data-table-header th.select-all {
+  width: 48px;
+  text-align: center;
+}
+
+.data-table-header th.actions {
+  width: 120px;
+  text-align: center;
+}
+
+/* Body */
+.data-table-body tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.data-table-body tr:hover {
+  background-color: var(--background-hover);
+}
+
+.data-table-body tr.selected {
+  background-color: rgba(63, 81, 181, 0.1);
+  border-left: 4px solid var(--primary-color);
+}
+
+.data-table-body tr.selected:hover {
+  background-color: rgba(63, 81, 181, 0.15);
+}
+
+.data-table-body td {
+  padding: var(--spacing-md) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.data-table-body td.select-cell {
+  width: 48px;
+  text-align: center;
+}
+
+.data-table-body td.actions-cell {
+  width: 120px;
+  text-align: center;
+}
+
+/* Checkbox */
+.data-table-checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.data-table-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Row selection */
+.data-table-row-selectable {
+  cursor: pointer;
+}
+
+.data-table-row-selectable:hover {
+  background-color: var(--background-hover);
+}
+
+/* Actions */
+.data-table-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  align-items: center;
+}
+
+.data-table-action-btn {
+  min-width: auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+}
+
+.data-table-action-btn:hover {
+  transform: scale(1.1);
+}
+
+.data-table-action-btn.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.data-table-action-btn.secondary {
+  background-color: var(--background-secondary);
+  color: var(--text-secondary);
+}
+
+.data-table-action-btn.warn {
+  background-color: var(--warn-color);
+  color: white;
+}
+
+.data-table-action-btn.error {
+  background-color: var(--error-color);
+  color: white;
+}
+
+/* Search and filters */
+.data-table-controls {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--background-secondary);
+}
+
+.data-table-controls-row {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.data-table-search {
+  flex: 1;
+  min-width: 250px;
+}
+
+.data-table-search .form-input {
+  padding-left: 40px;
+}
+
+.data-table-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.data-table-filters {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.data-table-filter {
+  min-width: 150px;
+}
+
+.data-table-filter .form-select {
+  padding-right: 32px;
+}
+
+.data-table-filter-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.data-table-actions-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  margin-left: auto;
+}
+
+.data-table-bulk-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.data-table-bulk-actions .mat-button {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* Pagination */
+.data-table-pagination {
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--background-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.data-table-pagination-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.data-table-pagination-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.data-table-page-size {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.data-table-page-size-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.data-table-page-size-select {
+  min-width: 80px;
+}
+
+.data-table-page-size-select .form-select {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+.data-table-page-nav {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.data-table-page-btn {
+  min-width: auto;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.data-table-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.data-table-page-info {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0 var(--spacing-sm);
+  white-space: nowrap;
+}
+
+/* Empty state */
+.data-table-empty {
+  padding: var(--spacing-xxl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.data-table-empty-icon {
+  font-size: 4rem;
+  color: var(--text-disabled);
+  margin-bottom: var(--spacing-md);
+}
+
+.data-table-empty-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.data-table-empty-message {
+  font-size: var(--font-size-md);
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-lg) 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.data-table-empty-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Loading state */
+.data-table-loading {
+  padding: var(--spacing-xxl);
+  text-align: center;
+}
+
+.data-table-loading .loading-spinner {
+  padding: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .data-table-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+  
+  .data-table-search {
+    min-width: auto;
+  }
+  
+  .data-table-filters {
+    justify-content: center;
+  }
+  
+  .data-table-actions-controls {
+    margin-left: 0;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .data-table-controls {
+    padding: var(--spacing-md);
+  }
+  
+  .data-table-pagination {
+    padding: var(--spacing-md);
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .data-table-pagination-controls {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .data-table-page-size {
+    justify-content: center;
+  }
+  
+  .data-table-page-nav {
+    justify-content: center;
+  }
+  
+  .data-table-header th,
+  .data-table-body td {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+  
+  .data-table-header th.actions,
+  .data-table-body td.actions-cell {
+    width: 80px;
+  }
+  
+  .data-table-actions {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .data-table-action-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .data-table-controls {
+    padding: var(--spacing-sm);
+  }
+  
+  .data-table-pagination {
+    padding: var(--spacing-sm);
+  }
+  
+  .data-table-header th,
+  .data-table-body td {
+    padding: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+  }
+  
+  .data-table-header th.select-all,
+  .data-table-body td.select-cell {
+    display: none;
+  }
+  
+  .data-table-header th.actions,
+  .data-table-body td.actions-cell {
+    width: 60px;
+  }
+  
+  .data-table-action-btn {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .data-table-empty {
+    padding: var(--spacing-lg);
+  }
+  
+  .data-table-empty-icon {
+    font-size: 3rem;
+  }
+  
+  .data-table-empty-title {
+    font-size: var(--font-size-md);
+  }
+  
+  .data-table-empty-message {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Print styles */
+@media print {
+  .data-table {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .data-table-controls,
+  .data-table-pagination,
+  .data-table-header th.actions,
+  .data-table-body td.actions-cell,
+  .data-table-header th.select-all,
+  .data-table-body td.select-cell {
+    display: none;
+  }
+  
+  .data-table-body tr.selected {
+    background-color: transparent;
+    border-left: none;
+  }
+  
+  .data-table-body tr:hover {
+    background-color: transparent;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .data-table-header th,
+  .data-table-body td {
+    border-width: 2px;
+  }
+  
+  .data-table-header th.sortable::after {
+    font-weight: bold;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .data-table,
+  .data-table-body tr,
+  .data-table-header th,
+  .data-table-action-btn {
+    transition: none;
+  }
+  
+  .data-table-action-btn:hover {
+    transform: none;
+  }
+}

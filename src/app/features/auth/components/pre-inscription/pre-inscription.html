@@ -1,0 +1,328 @@
+<div class="pre-inscription-page">
+  <!-- Header Navigation -->
+  <header class="header-navigation">
+    <div class="header-container">
+      <div class="header-content">
+        <div class="logo-section">
+          <img src="assets/logoo.png" alt="Logo ISI" class="logo-image" />
+        </div>
+        <nav class="main-navigation">
+          <a routerLink="/visitor/home" class="nav-link">Accueil</a>
+          <a routerLink="/visitor/formations" class="nav-link">Formations</a>
+        </nav>
+        <div class="auth-buttons">
+          <a routerLink="/auth/login" class="btn btn-outline">
+            <span class="btn-icon">🔑</span>
+            <span>Connexion</span>
+          </a>
+          <a routerLink="/auth/pre-inscription" class="btn btn-primary active">
+            <span class="btn-icon">📝</span>
+            <span>Pré-inscription</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="pre-inscription-form-section">
+    <div class="form-container">
+      <div class="form-header">
+        <div class="logo-container">
+          <img src="assets/logoo.png" alt="Logo ISI" class="logo-image" />
+        </div>
+        <h1 class="form-title">Demande de Pré-inscription</h1>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+        </div>
+        <div class="progress-text">Étape {{ currentStep }} sur {{ totalSteps }}</div>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #preInscriptionForm="ngForm" class="pre-inscription-form">
+        
+        <!-- Étape 1: Informations personnelles -->
+        <div *ngIf="currentStep === 1" class="form-step">
+          <h3 class="step-title">Informations personnelles</h3>
+          
+          <!-- Une seule ligne : Genre, Nom, Prénom, Lieu de Naissance -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="label-icon">👤</span>
+                <span>Genre</span>
+              </label>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="genre" value="M" [(ngModel)]="formData.genre" class="radio-input"/>
+                  <span class="radio-label">M</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="genre" value="Mme" [(ngModel)]="formData.genre" class="radio-input"/>
+                  <span class="radio-label">Mme</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="genre" value="Mlle" [(ngModel)]="formData.genre" class="radio-input"/>
+                  <span class="radio-label">Mlle</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="nom" class="form-label">
+                <span class="label-icon">👤</span>
+                <span>Nom *</span>
+              </label>
+              <input type="text" id="nom" [(ngModel)]="formData.nom" name="nom" placeholder="Nom" required class="form-input"/>
+            </div>
+            <div class="form-group">
+              <label for="prenom" class="form-label">
+                <span class="label-icon">👤</span>
+                <span>Prénom *</span>
+              </label>
+              <input type="text" id="prenom" [(ngModel)]="formData.prenom" name="prenom" placeholder="Prénom" required class="form-input"/>
+            </div>
+            <div class="form-group">
+              <label for="lieuNaissance" class="form-label">
+                <span class="label-icon">📍</span>
+                <span>Lieu de Naissance *</span>
+              </label>
+              <input type="text" id="lieuNaissance" [(ngModel)]="formData.lieuNaissance" name="lieuNaissance" placeholder="Lieu de Naissance" required class="form-input"/>
+            </div>
+          </div>
+
+          <!-- Deuxième ligne : Date de Naissance seulement -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dateNaissance" class="form-label">
+                <span class="label-icon">📅</span>
+                <span>Date de Naissance *</span>
+              </label>
+              <input type="date" id="dateNaissance" [(ngModel)]="formData.dateNaissance" name="dateNaissance" required class="form-input"/>
+            </div>
+            <!-- Colonnes vides -->
+            <div class="form-group"></div>
+            <div class="form-group"></div>
+            <div class="form-group"></div>
+          </div>
+        </div>
+
+        <!-- Étape 2: Contact -->
+        <div *ngIf="currentStep === 2" class="form-step">
+          <h3 class="step-title">Informations de contact</h3>
+          
+          <!-- Une ligne : Adresse, Email, Téléphone, Pays -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="adresse" class="form-label">
+                <span class="label-icon">🏠</span>
+                <span>Adresse *</span>
+              </label>
+              <input type="text" id="adresse" [(ngModel)]="formData.adresse" name="adresse" placeholder="Adresse" required class="form-input"/>
+            </div>
+            <div class="form-group">
+              <label for="email" class="form-label">
+                <span class="label-icon">📧</span>
+                <span>Email *</span>
+              </label>
+              <input type="email" id="email" [(ngModel)]="formData.email" name="email" placeholder="Email" required class="form-input"/>
+            </div>
+            <div class="form-group">
+              <label for="telephone" class="form-label">
+                <span class="label-icon">📞</span>
+                <span>Téléphone *</span>
+              </label>
+              <input type="tel" id="telephone" [(ngModel)]="formData.telephone" name="telephone" placeholder="Téléphone" required class="form-input"/>
+            </div>
+            <div class="form-group">
+              <label for="paysOrigine" class="form-label">
+                <span class="label-icon">🌍</span>
+                <span>Pays *</span>
+              </label>
+              <select id="paysOrigine" [(ngModel)]="formData.paysOrigine" name="paysOrigine" required class="form-select">
+                <option value="">Sélectionner</option>
+                <option value="Senegal">Sénégal</option>
+                <option value="Mali">Mali</option>
+                <option value="Burkina Faso">Burkina Faso</option>
+                <option value="Cote d'Ivoire">Côte d'Ivoire</option>
+                <option value="Niger">Niger</option>
+                <option value="Guinee">Guinée</option>
+                <option value="Mauritanie">Mauritanie</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 3: Études -->
+        <div *ngIf="currentStep === 3" class="form-step">
+          <h3 class="step-title">Informations académiques</h3>
+          
+          <!-- Niveau d'Étude -->
+          <div class="form-group">
+            <label for="niveauEtude" class="form-label">
+              <span class="label-icon">🎓</span>
+              <span>Niveau d'Étude *</span>
+            </label>
+            <select id="niveauEtude" [(ngModel)]="formData.niveauEtude" name="niveauEtude" required class="form-select">
+              <option value="">Sélectionner un niveau</option>
+              <option value="Baccalaureat">Baccalauréat</option>
+              <option value="Licence 1">Licence 1</option>
+              <option value="Licence 2">Licence 2</option>
+              <option value="Licence 3">Licence 3</option>
+              <option value="Master 1">Master 1</option>
+              <option value="Master 2">Master 2</option>
+            </select>
+          </div>
+
+          <!-- Baccalauréat -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">🎯</span>
+              <span>Baccalauréat</span>
+            </label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="baccalaureat" value="Serie S" [(ngModel)]="formData.baccalaureat" class="radio-input"/>
+                <span class="radio-label">Série S</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="baccalaureat" value="Serie G" [(ngModel)]="formData.baccalaureat" class="radio-input"/>
+                <span class="radio-label">Série G</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="baccalaureat" value="Serie L" [(ngModel)]="formData.baccalaureat" class="radio-input"/>
+                <span class="radio-label">Série L</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="baccalaureat" value="Autres" [(ngModel)]="formData.baccalaureat" class="radio-input"/>
+                <span class="radio-label">Autres</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 4: Choix académiques -->
+        <div *ngIf="currentStep === 4" class="form-step">
+          <h3 class="step-title">Choix de formation</h3>
+          
+          <!-- Niveau à intégrer -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">📚</span>
+              <span>Niveau à intégrer</span>
+            </label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="niveauIntegrer" value="Licence 1" [(ngModel)]="formData.niveauIntegrer" class="radio-input"/>
+                <span class="radio-label">Licence 1</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="niveauIntegrer" value="Licence 2" [(ngModel)]="formData.niveauIntegrer" class="radio-input"/>
+                <span class="radio-label">Licence 2</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="niveauIntegrer" value="Licence 3" [(ngModel)]="formData.niveauIntegrer" class="radio-input"/>
+                <span class="radio-label">Licence 3</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="niveauIntegrer" value="Master 1" [(ngModel)]="formData.niveauIntegrer" class="radio-input"/>
+                <span class="radio-label">Master 1</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="niveauIntegrer" value="Master 2" [(ngModel)]="formData.niveauIntegrer" class="radio-input"/>
+                <span class="radio-label">Master 2</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="niveauIntegrer" value="Doctorat" [(ngModel)]="formData.niveauIntegrer" class="radio-input"/>
+                <span class="radio-label">Doctorat</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Département -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">🏢</span>
+              <span>Département</span>
+            </label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="departement" value="Genie Informatique" [(ngModel)]="formData.departement" class="radio-input"/>
+                <span class="radio-label">Génie Informatique</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="departement" value="Reseaux et Systemes" [(ngModel)]="formData.departement" class="radio-input"/>
+                <span class="radio-label">Réseaux et Systèmes</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="departement" value="Gestion et Management" [(ngModel)]="formData.departement" class="radio-input"/>
+                <span class="radio-label">Gestion et Management</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="departement" value="Intelligence Artificielle et Ingenierie de donnees" [(ngModel)]="formData.departement" class="radio-input"/>
+                <span class="radio-label">Intelligence Artificielle et Ingénierie de données</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 5: Captcha et validation -->
+        <div *ngIf="currentStep === 5" class="form-step">
+          <h3 class="step-title">Validation finale</h3>
+          
+          <!-- Captcha et Résumé sur la même ligne -->
+          <div class="form-row">
+            <!-- Captcha -->
+            <div class="form-group">
+              <label for="captcha" class="form-label">
+                <span class="label-icon">🔢</span>
+                <span>{{ captchaQuestion }} *</span>
+              </label>
+              <input type="text" id="captcha" [(ngModel)]="formData.captcha" name="captcha" placeholder="Votre réponse" required class="form-input captcha-input"/>
+            </div>
+            
+            <!-- Résumé des informations -->
+            <div class="summary-section">
+              <h4>Récapitulatif</h4>
+              <div class="summary-grid">
+                <div class="summary-item">
+                  <strong>Nom:</strong> {{ formData.genre }} {{ formData.prenom }} {{ formData.nom }}
+                </div>
+                <div class="summary-item">
+                  <strong>Formation:</strong> {{ formData.niveauIntegrer }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Colonnes vides pour équilibrer -->
+            <div class="form-group"></div>
+            <div class="form-group"></div>
+          </div>
+        </div>
+
+        <!-- Navigation entre étapes -->
+        <div class="form-actions">
+          <button type="button" (click)="previousStep()" class="btn btn-outline" [disabled]="currentStep === 1">
+            <span class="btn-icon">⬅️</span>
+            <span>Précédent</span>
+          </button>
+          
+          <button *ngIf="currentStep < totalSteps" type="button" (click)="nextStep()" class="btn btn-primary" [disabled]="!canProceedToNext()">
+            <span class="btn-icon">➡️</span>
+            <span>Continuer</span>
+          </button>
+          
+          <button *ngIf="currentStep === totalSteps" type="submit" class="btn btn-primary">
+            <span class="btn-icon">✅</span>
+            <span>Valider la demande</span>
+          </button>
+        </div>
+
+      </form>
+
+
+    </div>
+  </section>
+</div>
