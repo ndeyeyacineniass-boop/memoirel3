@@ -1,10 +1,5 @@
 # ISI Management Angular
 
-Application de gestion éducative migrée de React vers Angular 18.
-
-## 🎯 **Page d'Accueil - Reproduction Fidèle du React**
-
-La page d'accueil Angular est maintenant **100% identique** au projet React `Visitor.tsx` avec :
 
 ### **✅ Sections Implémentées**
 - **Header Navigation** : Logo ISI + boutons Connexion/Inscription
@@ -85,24 +80,14 @@ src/
 └── assets/                  # Images et ressources
 ```
 
-## 🎨 **Migration Complète React → Angular**
 
-### **Phase 1 : UI Components ✅**
+### ** UI Components ✅**
 - ✅ Page d'accueil (Visitor.tsx → HomeComponent)
 - ✅ Login (Login.tsx → LoginComponent)
 - ✅ Register (Register.tsx → RegisterComponent)
 - ✅ Admin Dashboard (Admin.tsx → AdminDashboardComponent)
 
-### **Phase 2 : State Management** (À venir)
-- NgRx Store + Effects
-- Services Angular
-- Guards et Interceptors
 
-### **Phase 3 : API Integration** (À venir)
-- HTTP Client
-- Services backend
-- Authentification JWT
 
 ---
 
-**La page d'accueil est maintenant parfaitement identique au projet React !** 🎉
