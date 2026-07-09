@@ -1,0 +1,22 @@
+<div class="app-container">
+  <!-- Barre de progression globale -->
+  <mat-progress-bar 
+    *ngIf="loading" 
+    mode="indeterminate" 
+    class="global-progress-bar">
+  </mat-progress-bar>
+
+  <!-- Contenu principal -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Spinner de chargement global -->
+  <app-loading-spinner 
+    *ngIf="loading"
+    type="circular"
+    size="large"
+    [fullScreen]="true"
+    message="Chargement de l'application...">
+  </app-loading-spinner>
+</div>

@@ -1,0 +1,54 @@
+<div [class]="containerClass" class="error-message-container">
+  <mat-card [class]="errorBgColor" class="error-message-card border-l-4 border-l-4">
+    <div class="flex items-start space-x-3">
+      <!-- Icône -->
+      <div *ngIf="showIcon" class="flex-shrink-0">
+        <mat-icon [class]="errorColor" class="text-2xl">
+          {{ errorIcon }}
+        </mat-icon>
+      </div>
+
+      <!-- Contenu -->
+      <div class="flex-1 min-w-0">
+        <!-- Titre -->
+        <h3 *ngIf="getTitle()" class="text-lg font-semibold text-gray-900 mb-1">
+          {{ getTitle() }}
+        </h3>
+
+        <!-- Message principal -->
+        <p *ngIf="message" class="text-gray-700 mb-2">
+          {{ message }}
+        </p>
+
+        <!-- Détails -->
+        <div *ngIf="details" class="bg-gray-100 rounded-lg p-3 mb-3">
+          <p class="text-sm text-gray-600 font-mono">{{ details }}</p>
+        </div>
+
+        <!-- Actions -->
+        <div *ngIf="showActions && actions.length > 0" class="flex flex-wrap gap-2 mt-3">
+          <button 
+            *ngFor="let action of actions"
+            mat-button
+            [color]="action.color || 'primary'"
+            (click)="onActionClick(action.action)"
+            class="flex items-center space-x-2">
+            <mat-icon *ngIf="action.icon" class="text-sm">{{ action.icon }}</mat-icon>
+            <span>{{ action.label }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bouton de fermeture -->
+      <div *ngIf="dismissible" class="flex-shrink-0">
+        <button 
+          mat-icon-button 
+          (click)="onDismiss()"
+          class="text-gray-400 hover:text-gray-600"
+          aria-label="Fermer">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>

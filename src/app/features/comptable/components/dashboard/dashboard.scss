@@ -1,0 +1,7 @@
+/* Interface Comptable - Utilise le même design que l'admin */
+@import '../../../admin/components/dashboard/dashboard.scss';
+
+/* Même couleur bleue que l'admin */
+.admin-sidebar {
+  background: hsl(220, 100%, 32%) !important;
+}

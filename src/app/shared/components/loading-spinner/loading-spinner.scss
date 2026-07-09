@@ -1,0 +1,378 @@
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  transition: var(--transition);
+}
+
+/* Spinner types */
+.spinner-circular {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-linear {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.spinner-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.spinner-pulse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Circular spinner */
+.spinner-circular .mat-spinner {
+  width: 100%;
+  height: 100%;
+}
+
+.spinner-circular.small .mat-spinner {
+  width: 32px;
+  height: 32px;
+}
+
+.spinner-circular.medium .mat-spinner {
+  width: 48px;
+  height: 48px;
+}
+
+.spinner-circular.large .mat-spinner {
+  width: 64px;
+  height: 64px;
+}
+
+.spinner-circular.xlarge .mat-spinner {
+  width: 96px;
+  height: 96px;
+}
+
+/* Linear progress bar */
+.spinner-linear .mat-progress-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: var(--border-radius-sm);
+}
+
+.spinner-linear.small .mat-progress-bar {
+  height: 4px;
+}
+
+.spinner-linear.medium .mat-progress-bar {
+  height: 6px;
+}
+
+.spinner-linear.large .mat-progress-bar {
+  height: 10px;
+}
+
+.spinner-linear.xlarge .mat-progress-bar {
+  height: 12px;
+}
+
+/* Dots spinner */
+.spinner-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: dotPulse 1.4s ease-in-out infinite both;
+}
+
+.spinner-dots.small .dot {
+  width: 8px;
+  height: 8px;
+}
+
+.spinner-dots.medium .dot {
+  width: 10px;
+  height: 10px;
+}
+
+.spinner-dots.large .dot {
+  width: 14px;
+  height: 14px;
+}
+
+.spinner-dots.xlarge .dot {
+  width: 16px;
+  height: 16px;
+}
+
+.spinner-dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.spinner-dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.spinner-dots .dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Pulse spinner */
+.spinner-pulse .pulse {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.spinner-pulse.small .pulse {
+  width: 32px;
+  height: 32px;
+}
+
+.spinner-pulse.medium .pulse {
+  width: 40px;
+  height: 40px;
+}
+
+.spinner-pulse.large .pulse {
+  width: 56px;
+  height: 56px;
+}
+
+.spinner-pulse.xlarge .pulse {
+  width: 72px;
+  height: 72px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+}
+
+/* Message */
+.spinner-message {
+  text-align: center;
+  color: inherit;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  margin: 0;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.spinner-message.small {
+  font-size: var(--font-size-sm);
+}
+
+.spinner-message.large {
+  font-size: var(--font-size-lg);
+}
+
+.spinner-message.xlarge {
+  font-size: var(--font-size-xl);
+}
+
+/* Color variants */
+.spinner-primary {
+  color: var(--primary-color);
+}
+
+.spinner-accent {
+  color: var(--accent-color);
+}
+
+.spinner-warn {
+  color: var(--warn-color);
+}
+
+.spinner-error {
+  color: var(--error-color);
+}
+
+.spinner-success {
+  color: var(--success-color);
+}
+
+.spinner-info {
+  color: var(--info-color);
+}
+
+/* Overlay variant */
+.loading-spinner.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.loading-spinner.overlay .spinner-message {
+  color: var(--text-primary);
+}
+
+/* Full screen variant */
+.loading-spinner.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-primary);
+  z-index: 1000;
+}
+
+/* Inline variant */
+.loading-spinner.inline {
+  padding: var(--spacing-sm);
+  min-height: auto;
+}
+
+.loading-spinner.inline .spinner-message {
+  font-size: var(--font-size-sm);
+}
+
+/* Compact variant */
+.loading-spinner.compact {
+  padding: var(--spacing-sm);
+  gap: var(--spacing-sm);
+}
+
+.loading-spinner.compact .spinner-message {
+  font-size: var(--font-size-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .loading-spinner {
+    padding: var(--spacing-md);
+  }
+  
+  .spinner-message {
+    max-width: 250px;
+  }
+  
+  .spinner-pulse .pulse {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .spinner-pulse.large .pulse {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .spinner-pulse.xlarge .pulse {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-spinner {
+    padding: var(--spacing-sm);
+  }
+  
+  .spinner-message {
+    max-width: 200px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .spinner-pulse .pulse {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .spinner-pulse.medium .pulse {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .spinner-pulse.large .pulse {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .spinner-pulse.xlarge .pulse {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .loading-spinner.overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .loading-spinner.overlay .spinner-message {
+    color: var(--text-primary);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner .dot,
+  .loading-spinner .pulse {
+    animation: none;
+  }
+  
+  .loading-spinner .dot {
+    opacity: 0.7;
+  }
+  
+  .loading-spinner .pulse {
+    opacity: 0.6;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .loading-spinner .dot,
+  .loading-spinner .pulse {
+    border: 2px solid currentColor;
+  }
+  
+  .loading-spinner.overlay {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+  
+  .loading-spinner.fullscreen {
+    background-color: var(--background-primary);
+    border: 2px solid currentColor;
+  }
+}

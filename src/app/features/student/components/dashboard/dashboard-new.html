@@ -1,0 +1,423 @@
+<!-- Header Étudiant -->
+<app-admin-header 
+    [user]="currentUser" 
+    [isAuthenticated]="isAuthenticated">
+</app-admin-header>
+
+<!-- Layout principal avec sidebar -->
+<div class="admin-layout">
+    <!-- Sidebar vertical -->
+    <div class="admin-sidebar" style="background: hsl(220, 100%, 32%) !important; color: white !important; width: 250px !important;">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">📋 Menu Principal</h2>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Tableau de Bord - Premier bouton -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'dashboard'"
+                (click)="setActiveTab('dashboard')"
+            >
+                <span class="sidebar-icon">📊</span>
+                <span class="sidebar-text">Tableau de Bord</span>
+            </button>
+            
+            <!-- Mes Notes et Évaluations -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'notes'"
+                (click)="setActiveTab('notes')"
+            >
+                <span class="sidebar-icon">📚</span>
+                <span class="sidebar-text">Mes Notes</span>
+            </button>
+            
+            <!-- Notifications et Calendriers -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'notifications'"
+                (click)="setActiveTab('notifications')"
+            >
+                <span class="sidebar-icon">🔔</span>
+                <span class="sidebar-text">Notifications</span>
+            </button>
+            
+            <!-- Mes Documents -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'documents'"
+                (click)="setActiveTab('documents')"
+            >
+                <span class="sidebar-icon">📋</span>
+                <span class="sidebar-text">Mes Documents</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="admin-main-content">
+        <!-- Contenu dynamique selon l'onglet sélectionné -->
+        
+        <!-- Onglet Mes Notes -->
+        <div *ngIf="activeTab === 'notes'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Mes Notes et Évaluations</h2>
+                <p class="section-subtitle">Consultation de vos résultats et progression académique</p>
+                <div class="section-actions">
+                    <select class="filter-select">
+                        <option value="">Toutes les matières</option>
+                        <option value="programmation">Programmation</option>
+                        <option value="bdd">Bases de données</option>
+                        <option value="reseaux">Réseaux</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card blue">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getStudentAverage() }}</div>
+                        <div class="stat-label">Moyenne générale</div>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getPassedEvaluations() }}</div>
+                        <div class="stat-label">Évaluations réussies</div>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getTotalEvaluations() }}</div>
+                        <div class="stat-label">Total évaluations</div>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ getClassRank() }}</div>
+                        <div class="stat-label">Rang dans la classe</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Évaluation</th>
+                            <th>Matière</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Note</th>
+                            <th>Coefficient</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let note of getStudentNotes()">
+                            <td><strong>{{ getEvaluationName(note.evaluationId) }}</strong></td>
+                            <td>Programmation Java</td>
+                            <td><span class="status-badge examen">Examen</span></td>
+                            <td>15/06/2024</td>
+                            <td>
+                                <span class="note-display" [class]="getNoteClass(note.valeur)">
+                                    <strong>{{ note.valeur }}/20</strong>
+                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Détails" (click)="viewNoteDetails(note.id)">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Réclamer Note" (click)="showReclamationModal(note.id)">⚠️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Notifications -->
+        <div *ngIf="activeTab === 'notifications'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Notifications et Calendriers</h2>
+                <p class="section-subtitle">Annonces importantes et calendriers académiques</p>
+                <div class="section-actions">
+                    <button class="action-btn" (click)="markAllAsRead()">
+                        <span class="btn-icon">✅</span>
+                        Tout marquer lu
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Titre</th>
+                            <th>Date</th>
+                            <th>Priorité</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status-badge examen">📅 Calendrier</span></td>
+                            <td><strong>Calendrier des Examens - Semestre 2</strong></td>
+                            <td>01/06/2024</td>
+                            <td><span class="status-badge reject">Urgent</span></td>
+                            <td><span class="status-badge confirmee">Lu</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Calendrier" (click)="viewCalendar('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge tp">📢 Annonce</span></td>
+                            <td><strong>Nouvelle évaluation programmée</strong></td>
+                            <td>28/05/2024</td>
+                            <td><span class="status-badge attente">Normal</span></td>
+                            <td><span class="status-badge attente">Non lu</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Lire Annonce" (click)="readAnnouncement('2')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge confirmee">🎯 Résultat</span></td>
+                            <td><strong>Publication des notes - TP Bases de données</strong></td>
+                            <td>25/05/2024</td>
+                            <td><span class="status-badge confirmee">Info</span></td>
+                            <td><span class="status-badge confirmee">Lu</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Notes" (click)="viewGradeNotification('3')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Documents -->
+        <div *ngIf="activeTab === 'documents'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Mes Documents</h2>
+                <p class="section-subtitle">Bulletins, certificats et documents administratifs</p>
+                <div class="section-actions">
+                    <button class="action-btn add-btn" (click)="showUploadModal = true">
+                        <span class="btn-icon">📎</span>
+                        Ajouter Document
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Type de Document</th>
+                            <th>Nom</th>
+                            <th>Date de Génération</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status-badge examen">📄 Bulletin</span></td>
+                            <td><strong>Bulletin Semestre 1 - 2024</strong></td>
+                            <td>15/02/2024</td>
+                            <td><span class="status-badge confirmee">Disponible</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Consulter" (click)="viewBulletin('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Télécharger PDF" (click)="downloadDocument('1')">📥</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge tp">📜 Certificat</span></td>
+                            <td><strong>Certificat de Scolarité 2024</strong></td>
+                            <td>10/01/2024</td>
+                            <td><span class="status-badge confirmee">Disponible</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Consulter" (click)="viewCertificate('2')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Télécharger PDF" (click)="downloadDocument('2')">📥</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge projet">📋 Relevé</span></td>
+                            <td><strong>Relevé de Notes - Licence 2</strong></td>
+                            <td>20/06/2023</td>
+                            <td><span class="status-badge confirmee">Disponible</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Consulter" (click)="viewTranscript('3')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Télécharger PDF" (click)="downloadDocument('3')">📥</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Tableau de Bord -->
+        <div *ngIf="activeTab === 'dashboard'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Tableau de Bord Étudiant</h2>
+                <p class="section-subtitle">Vue d'ensemble de votre parcours académique</p>
+            </div>
+
+            <!-- Statistiques détaillées -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getStudentAverage() }}/20</div>
+                            <div class="stat-label">Moyenne générale</div>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getPassedEvaluations() }}</div>
+                            <div class="stat-label">Évaluations réussies</div>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-icon">🔔</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getUnreadNotifications() }}</div>
+                            <div class="stat-label">Notifications non lues</div>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-content">
+                            <div class="stat-number">{{ getAvailableDocuments() }}</div>
+                            <div class="stat-label">Documents disponibles</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="main-section" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <h3 class="section-title">Actions Rapides</h3>
+                    <p class="section-subtitle">Accès direct aux fonctionnalités principales</p>
+                </div>
+                
+                <div class="quick-actions-grid">
+                    <button class="quick-action-card" (click)="setActiveTab('notes')">
+                        <div class="action-icon">📚</div>
+                        <h4>Consulter Mes Notes</h4>
+                        <p>Voir vos résultats et progression</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('notifications')">
+                        <div class="action-icon">🔔</div>
+                        <h4>Notifications</h4>
+                        <p>{{ getUnreadNotifications() }} nouvelles notifications</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('documents')">
+                        <div class="action-icon">📋</div>
+                        <h4>Mes Documents</h4>
+                        <p>Bulletins et certificats</p>
+                    </button>
+                    <button class="quick-action-card" (click)="downloadLatestBulletin()">
+                        <div class="action-icon">📥</div>
+                        <h4>Dernier Bulletin</h4>
+                        <p>Télécharger le bulletin récent</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Réclamation -->
+<div *ngIf="showReclamation" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Réclamation de Note</h3>
+            <button class="modal-close" (click)="closeReclamationModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label>Motif de la réclamation *</label>
+                    <textarea 
+                        [(ngModel)]="reclamationMotif" 
+                        name="motif" 
+                        placeholder="Expliquez pourquoi vous contestez cette note..."
+                        rows="4"
+                        required>
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <label>Justification détaillée</label>
+                    <textarea 
+                        [(ngModel)]="reclamationJustification" 
+                        name="justification" 
+                        placeholder="Apportez des éléments pour soutenir votre réclamation..."
+                        rows="3">
+                    </textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeReclamationModal()">Annuler</button>
+            <button class="btn btn-primary" (click)="submitReclamation()">Envoyer la Réclamation</button>
+        </div>
+    </div>
+</div>

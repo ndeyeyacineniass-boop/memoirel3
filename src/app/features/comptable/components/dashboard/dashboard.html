@@ -1,0 +1,467 @@
+<!-- Header Comptable -->
+<app-admin-header 
+    [user]="currentUser" 
+    [isAuthenticated]="isAuthenticated">
+</app-admin-header>
+
+<!-- Layout principal avec sidebar -->
+<div class="admin-layout">
+    <!-- Sidebar vertical -->
+    <div class="admin-sidebar" style="background: hsl(220, 100%, 32%) !important; color: white !important; width: 250px !important;">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">📋 Menu Principal</h2>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Tableau de Bord - Premier bouton -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'dashboard'"
+                (click)="setActiveTab('dashboard')"
+            >
+                <span class="sidebar-icon">📊</span>
+                <span class="sidebar-text">Tableau de Bord</span>
+            </button>
+            
+            <!-- Liste des Candidats -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'candidats'"
+                (click)="setActiveTab('candidats')"
+            >
+                <span class="sidebar-icon">📋</span>
+                <span class="sidebar-text">Liste Candidats</span>
+            </button>
+            
+            <!-- Enregistrement des Paiements -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'paiements'"
+                (click)="setActiveTab('paiements')"
+            >
+                <span class="sidebar-icon">💳</span>
+                <span class="sidebar-text">Paiements</span>
+            </button>
+            
+            <!-- Suivi des Encaissements -->
+            <button 
+                class="sidebar-item" 
+                [class.active]="activeTab === 'suivi'"
+                (click)="setActiveTab('suivi')"
+            >
+                <span class="sidebar-icon">📈</span>
+                <span class="sidebar-text">Suivi Encaissements</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="admin-main-content">
+        <!-- Contenu dynamique selon l'onglet sélectionné -->
+        
+        <!-- Onglet Liste des Candidats -->
+        <div *ngIf="activeTab === 'candidats'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Liste des Candidats - Gestion Paiements Inscription</h2>
+                <p class="section-subtitle">Consultation de tous les candidats préinscrits avec statuts de validation</p>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <input type="text" class="search-input" placeholder="Rechercher un candidat...">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <select class="filter-select">
+                        <option value="">Tous les statuts</option>
+                        <option value="attente">En attente</option>
+                        <option value="etude">En cours d'étude</option>
+                        <option value="valide">Validé (Payable)</option>
+                        <option value="paye">Payé</option>
+                        <option value="refuse">Refusé</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nom & Prénom</th>
+                            <th>Formation</th>
+                            <th>Date Préinscription</th>
+                            <th>Statut Validation</th>
+                            <th>Paiement</th>
+                            <th>Montant</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>DIOP Amadou</strong></td>
+                            <td>Licence Informatique</td>
+                            <td>15/01/2024</td>
+                            <td><span class="status-badge attente">🟡 En attente</span></td>
+                            <td><span class="status-badge reject">❌ Bloqué</span></td>
+                            <td>750 000 FCFA</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Dossier" (click)="viewCandidate('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>NDIAYE Fatou</strong></td>
+                            <td>Master Réseaux</td>
+                            <td>20/01/2024</td>
+                            <td><span class="status-badge confirmee">✅ Validé</span></td>
+                            <td><span class="status-badge attente">⏳ Attente</span></td>
+                            <td>900 000 FCFA</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Dossier" (click)="viewCandidate('2')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-btn primary-btn" (click)="recordPayment('2')">
+                                        <span class="btn-icon">💳</span>
+                                        Encaisser
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>FALL Omar</strong></td>
+                            <td>Développement Web</td>
+                            <td>10/01/2024</td>
+                            <td><span class="status-badge confirmee">💰 Payé</span></td>
+                            <td><span class="status-badge confirmee">✅ Fait</span></td>
+                            <td>600 000 FCFA</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Dossier" (click)="viewCandidate('3')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Télécharger Reçu" (click)="downloadReceipt('3')">📄</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>BA Aissatou</strong></td>
+                            <td>Licence Comptabilité</td>
+                            <td>25/01/2024</td>
+                            <td><span class="status-badge reject">❌ Refusé</span></td>
+                            <td><span class="status-badge reject">❌ Bloqué</span></td>
+                            <td>750 000 FCFA</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Dossier" (click)="viewCandidate('4')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Paiements -->
+        <div *ngIf="activeTab === 'paiements'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Enregistrement des Paiements</h2>
+                <p class="section-subtitle">Candidats validés autorisés au paiement d'inscription</p>
+                <div class="section-actions">
+                    <button class="action-btn" (click)="refreshPayments()">
+                        <span class="btn-icon">🔄</span>
+                        Actualiser
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Candidat</th>
+                            <th>Formation</th>
+                            <th>Montant à Payer</th>
+                            <th>Date Validation</th>
+                            <th>Statut Paiement</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>NDIAYE Fatou</strong></td>
+                            <td>Master Réseaux & Sécurité</td>
+                            <td><strong>900 000 FCFA</strong></td>
+                            <td>20/01/2024</td>
+                            <td><span class="status-badge attente">⏳ En attente de paiement</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn primary-btn" (click)="openPaymentModal('2')">
+                                        <span class="btn-icon">💳</span>
+                                        Encaisser Paiement
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>SECK Moussa</strong></td>
+                            <td>Licence Informatique</td>
+                            <td><strong>750 000 FCFA</strong></td>
+                            <td>18/01/2024</td>
+                            <td><span class="status-badge attente">⏳ En attente de paiement</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn primary-btn" (click)="openPaymentModal('5')">
+                                        <span class="btn-icon">💳</span>
+                                        Encaisser Paiement
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Suivi des Encaissements -->
+        <div *ngIf="activeTab === 'suivi'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Suivi des Encaissements</h2>
+                <p class="section-subtitle">État des paiements d'inscription et statistiques</p>
+                <div class="section-actions">
+                    <button class="action-btn" (click)="exportReport()">
+                        <span class="btn-icon">📊</span>
+                        Export Rapport
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card blue">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <div class="stat-number">4 200 000</div>
+                        <div class="stat-label">FCFA encaissés ce mois</div>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Paiements enregistrés</div>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-content">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">En attente de paiement</div>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <div class="stat-number">70%</div>
+                        <div class="stat-label">Taux d'encaissement</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Candidat</th>
+                            <th>Formation</th>
+                            <th>Montant</th>
+                            <th>Mode Paiement</th>
+                            <th>Référence</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>25/01/2024</td>
+                            <td><strong>FALL Omar</strong></td>
+                            <td>Développement Web</td>
+                            <td>600 000 FCFA</td>
+                            <td><span class="status-badge confirmee">Espèces</span></td>
+                            <td>REC-2024-001</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Détails" (click)="viewPaymentDetails('1')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Télécharger Reçu" (click)="downloadReceipt('1')">📄</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>22/01/2024</td>
+                            <td><strong>DIALLO Mariama</strong></td>
+                            <td>Licence Informatique</td>
+                            <td>750 000 FCFA</td>
+                            <td><span class="status-badge tp">Chèque</span></td>
+                            <td>CHQ-456789</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-icon view" title="Voir Détails" (click)="viewPaymentDetails('2')">
+                                        <svg class="action-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-icon edit" title="Télécharger Reçu" (click)="downloadReceipt('2')">📄</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Onglet Tableau de Bord -->
+        <div *ngIf="activeTab === 'dashboard'" class="main-section">
+            <div class="section-header">
+                <h2 class="section-title">Tableau de Bord Comptable</h2>
+                <p class="section-subtitle">Vue d'ensemble des paiements d'inscription</p>
+            </div>
+
+            <!-- Statistiques détaillées -->
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Total candidats</div>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-number">7</div>
+                            <div class="stat-label">Paiements enregistrés</div>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-content">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Validés (payables)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-icon">❌</div>
+                        <div class="stat-content">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Non payables</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="main-section" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <h3 class="section-title">Actions Rapides</h3>
+                    <p class="section-subtitle">Accès direct aux fonctionnalités de paiement</p>
+                </div>
+                
+                <div class="quick-actions-grid">
+                    <button class="quick-action-card" (click)="setActiveTab('candidats')">
+                        <div class="action-icon">👥</div>
+                        <h4>Voir Tous les Candidats</h4>
+                        <p>Liste complète avec statuts</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('paiements')">
+                        <div class="action-icon">💳</div>
+                        <h4>Encaisser Paiements</h4>
+                        <p>3 candidats autorisés</p>
+                    </button>
+                    <button class="quick-action-card" (click)="setActiveTab('suivi')">
+                        <div class="action-icon">📊</div>
+                        <h4>Suivi Encaissements</h4>
+                        <p>4,2M FCFA ce mois</p>
+                    </button>
+                    <button class="quick-action-card" (click)="exportReport()">
+                        <div class="action-icon">📋</div>
+                        <h4>Rapport Comptable</h4>
+                        <p>Export pour comptabilité</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour enregistrement de paiement -->
+<div *ngIf="showPaymentModalVisible" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Enregistrer un Paiement d'Inscription</h3>
+            <button class="modal-close" (click)="showPaymentModalVisible = false">×</button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label>Candidat *</label>
+                    <input type="text" [value]="selectedCandidateName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Montant à encaisser *</label>
+                    <input type="text" [value]="selectedAmount" readonly>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mode de paiement *</label>
+                        <select [(ngModel)]="paymentMode" name="paymentMode" required>
+                            <option value="">Sélectionner</option>
+                            <option value="especes">Espèces</option>
+                            <option value="cheque">Chèque</option>
+                            <option value="virement">Virement bancaire</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date de réception *</label>
+                        <input type="date" [(ngModel)]="paymentDate" name="paymentDate" required>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="paymentMode === 'cheque'">
+                    <label>Numéro de chèque</label>
+                    <input type="text" [(ngModel)]="checkNumber" name="checkNumber" placeholder="Ex: 123456789">
+                </div>
+                <div class="form-group" *ngIf="paymentMode === 'virement'">
+                    <label>Référence virement</label>
+                    <input type="text" [(ngModel)]="transferRef" name="transferRef" placeholder="Ex: VIR-2024-001">
+                </div>
+                <div class="form-group">
+                    <label>Commentaires</label>
+                    <textarea [(ngModel)]="paymentComments" name="paymentComments" placeholder="Remarques éventuelles..."></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="showPaymentModalVisible = false">Annuler</button>
+            <button class="btn btn-primary" (click)="confirmPayment()">Enregistrer le Paiement</button>
+        </div>
+    </div>
+</div>
