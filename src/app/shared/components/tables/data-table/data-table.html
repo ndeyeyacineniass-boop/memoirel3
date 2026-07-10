@@ -1,0 +1,37 @@
+<div class="data-table-container">
+  <!-- Simple Table -->
+  <div class="table-wrapper">
+    <table class="data-table" [class.striped]="striped" [class.bordered]="bordered" [class.hoverable]="hoverable">
+      <thead>
+        <tr>
+          <th *ngFor="let column of columns" class="table-header">
+            {{ column.label }}
+          </th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let row of data; trackBy: trackByFn; let i = index" 
+            (click)="onRowClick(row)"
+            class="table-row">
+          <td *ngFor="let column of columns" class="table-cell">
+            {{ getCellValue(row, column.key) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Empty State -->
+  <div *ngIf="!loading && (!data || data.length === 0)" class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h3 class="empty-title">{{ emptyTitle || 'Aucune donnée' }}</h3>
+    <p class="empty-message">{{ emptyMessage || 'Aucune donnée disponible pour le moment.' }}</p>
+  </div>
+  
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p class="loading-message">{{ loadingMessage || 'Chargement en cours...' }}</p>
+  </div>
+</div>
